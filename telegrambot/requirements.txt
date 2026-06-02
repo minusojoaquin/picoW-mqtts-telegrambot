@@ -1,3 +1,4 @@
 python-telegram-bot
 aiomysql
 matplotlib
+paho-mqtt>=2.0.0
