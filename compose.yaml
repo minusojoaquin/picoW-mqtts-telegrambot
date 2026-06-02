@@ -112,7 +112,7 @@ services:
       - VALIDATION=dns
       - DNSPLUGIN=duckdns
       - SUBDOMAINS=
-      - DUCKDNSTOKEN=${DUCKDNS_TOKEN} # Requisito crítico para el plugin
+      - DUCKDNSTOKEN=${DUCKDNS_TOKEN} # Requisito  para el plugin
     volumes:
       - ./swag:/config
     ports:

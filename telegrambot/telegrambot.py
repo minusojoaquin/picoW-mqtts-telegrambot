@@ -10,12 +10,10 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 # IDENTIFICADOR DE HARDWARE
-ID_DISPOSITIVO = "e663a837cb8d2c37" # Extraído de la captura serial
+ID_DISPOSITIVO = "e663a837cb8d2c37" # Se extrae al ejecutar el codigo para micropython
 
-# EXTRACCIÓN DE ENTORNO
 try:
     TB_TOKEN = os.environ["TB_TOKEN"]
-    # Resolución L4 interna estricta
     MQTT_BROKER = "mosquitto"
     MQTT_PORT = 8883
     MQTT_USER = os.environ["MQTT_USR"]
@@ -24,7 +22,6 @@ except KeyError as e:
     logging.error(f"FATAL: Variable de entorno faltante -> {e}")
     sys.exit(1)
 
-# CONFIGURACIÓN MQTTS
 def on_connect(client, userdata, flags, reason_code, properties):
     logging.info(f"[MQTT] Handshake MQTTS completado. RC: {reason_code}")
 
@@ -36,7 +33,6 @@ mqtt_client.tls_insecure_set(True)
 mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
 mqtt_client.loop_start()
 
-# CONTROLADOR DE INICIO
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     nombre = update.message.from_user.first_name if update.message.from_user.first_name else "Operador"
     
@@ -47,11 +43,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     await context.bot.send_message(
         update.message.chat.id, 
-        text=f"Terminal MQTTS Activa. [{nombre}]\nComandos paramétricos: /setpoint <float> | /periodo <int>",
+        text=f"[{nombre}]\nComandos: /setpoint | /periodo ",
         reply_markup=ReplyKeyboardMarkup(kb, resize_keyboard=True)
     )
 
-# CONTROLADORES MQTT (ESCRITURA)
 async def publicar_mqtt(update: Update, topic_suffix: str, payload: str):
     topic = f"{ID_DISPOSITIVO}/{topic_suffix}"
     info = mqtt_client.publish(topic, payload, qos=1)
@@ -83,7 +78,6 @@ async def rele(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def destello(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await publicar_mqtt(update, "destello", "1")
 
-# BUCLE PRINCIPAL
 def main():
     application = Application.builder().token(TB_TOKEN).build()
     
