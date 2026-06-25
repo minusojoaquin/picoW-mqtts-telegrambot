@@ -11,7 +11,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 # IDENTIFICADOR DE HARDWARE
-ID_DISPOSITIVO = "PONER EL ID GENERADO POR LA RASPBERRY"
+ID_DISPOSITIVO = os.environ["ID_DISPOSITIVO"]
 
 estado_actual = {"temperatura": "N/D", "humedad": "N/D"}
 
